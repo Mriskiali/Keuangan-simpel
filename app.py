@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for
 import locale
 import json
+import os
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=os.path.dirname(os.path.abspath(__file__)))
+
 locale.setlocale(locale.LC_ALL, 'id_ID')
-
 
 records = []
 saldo_awal = 0
@@ -24,7 +25,6 @@ def load_data_from_file():
     except FileNotFoundError:
         pass
 
-
 load_data_from_file()
 
 @app.route('/')
@@ -43,7 +43,6 @@ def tambah_catatan():
     global saldo_awal
     keterangan = request.form.get('keterangan')
     jumlah = float(request.form.get('jumlah'))
-
 
     saldo_awal -= jumlah
 
