@@ -1,11 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for
+import os
 import locale
 import json
 
 app = Flask(__name__)
 locale.setlocale(locale.LC_ALL, 'id_ID')
 
-
+# Load data from file on application startup
 records = []
 saldo_awal = 0
 
@@ -24,8 +25,10 @@ def load_data_from_file():
     except FileNotFoundError:
         pass
 
-
 load_data_from_file()
+
+# Define the CRON_SECRET from the environment variable
+cron_secret = os.environ.get('CRON_SECRET')
 
 @app.route('/')
 def index():
@@ -44,7 +47,6 @@ def tambah_catatan():
     keterangan = request.form.get('keterangan')
     jumlah = float(request.form.get('jumlah'))
 
-
     saldo_awal -= jumlah
 
     catatan = {'keterangan': keterangan, 'jumlah': jumlah}
@@ -62,6 +64,17 @@ def hapus_catatan(index):
         return redirect(url_for('index'))
     else:
         return "Indeks tidak valid"
+
+# Endpoint for cron job with security check
+@app.route('/api/cron', methods=['POST'])
+def cron_job():
+    # Check Authorization header for the correct CRON_SECRET
+    if request.headers.get('Authorization') != f'Bearer {cron_secret}':
+        return "Unauthorized", 401  # Return 401 Unauthorized if the secret is incorrect
+    else:
+        # Perform cron job logic here
+        # For example, you can call the functions you want to execute periodically
+        return "Cron Job Executed Successfully"
 
 if __name__ == '__main__':
     app.run(debug=True)
