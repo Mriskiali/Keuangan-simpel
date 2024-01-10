@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pencatatan Keuangan</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+
+      h1 {
+        color: #333;
+      }
+
+      form {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      input {
+        padding: 5px;
+        margin-bottom: 10px;
+      }
+
+      button {
+        padding: 8px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      h2 {
+        margin-top: 20px;
+        color: #333;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      li {
+        margin-bottom: 10px;
+      }
+
+      a {
+        color: #ff5733;
+        text-decoration: none;
+        margin-left: 10px;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Aplikasi Pencatatan Keuangan</h1>
+    <form method="post" action="{{ url_for('set_saldo_awal') }}">
+      <label for="saldo_awal">Saldo Awal (IDR):</label>
+      <input type="number" name="saldo_awal" required />
+      <button type="submit">Set Saldo Awal</button>
+    </form>
+    <form method="post" action="{{ url_for('tambah_catatan') }}">
+      <label for="keterangan">Keterangan:</label>
+      <input type="text" name="keterangan" required />
+      <label for="jumlah">Jumlah (IDR):</label>
+      <input type="number" name="jumlah" required />
+      <button type="submit">Tambah Catatan</button>
+    </form>
+    <h2>Saldo Awal: {{ "{:,.2f}".format(saldo_awal) }} IDR</h2>
+    <h2>Catatan Keuangan</h2>
+    <ul>
+      {% for catatan in records %}
+      <li>
+        {{ catatan.keterangan }} - {{ "{:,.2f}".format(catatan.jumlah) }} IDR
+        <a href="{{ url_for('hapus_catatan', index=loop.index-1) }}">Hapus</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
