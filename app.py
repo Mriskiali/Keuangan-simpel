@@ -7,8 +7,11 @@ app = Flask(__name__, template_folder=os.path.dirname(os.path.abspath(__file__))
 
 locale.setlocale(locale.LC_ALL, 'id_ID')
 
-records = []
+records = []    
 saldo_awal = 0
+
+def main():
+    return render_template('index.html')
 
 def save_data_to_file():
     data = {'records': records, 'saldo_awal': saldo_awal}
