@@ -10,9 +10,6 @@ locale.setlocale(locale.LC_ALL, 'id_ID')
 records = []    
 saldo_awal = 0
 
-def main():
-    return render_template('index.html')
-
 def save_data_to_file():
     data = {'records': records, 'saldo_awal': saldo_awal}
     with open('data.json', 'w') as file:
